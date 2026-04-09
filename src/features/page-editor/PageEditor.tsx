@@ -22,6 +22,57 @@ import { PreviewComponent } from "./PreviewComponent";
 
 const COMPONENT_TYPES: ComponentType[] = ["Text", "Header", "TextBox", "TextArea", "CheckBox", "SelectBox", "Button"];
 
+function PageStyleEditor({ pageId }: { pageId: string }) {
+  const { getCurrentProject, updatePageStyle } = useAppStore();
+  const project = getCurrentProject();
+  const page = project?.graph.pages.find((p) => p.id === pageId);
+  if (!page) return null;
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-4">
+      <h3 className="text-sm font-semibold text-gray-700">Page Style</h3>
+      <div>
+        <label className="block text-xs text-gray-500 mb-1">Background Color</label>
+        <input type="color" value={page.style.backgroundColor} onChange={(e) => updatePageStyle(pageId, { backgroundColor: e.target.value })} className="h-8 w-full rounded cursor-pointer" />
+      </div>
+      <div>
+        <label className="block text-xs text-gray-500 mb-1">Font Family</label>
+        <select value={page.style.fontFamily} onChange={(e) => updatePageStyle(pageId, { fontFamily: e.target.value })} className="w-full border border-gray-300 rounded px-2 py-1 text-sm">
+          <option value="sans-serif">Sans Serif</option>
+          <option value="serif">Serif</option>
+          <option value="monospace">Monospace</option>
+        </select>
+      </div>
+      <div>
+        <label className="block text-xs text-gray-500 mb-1">Flex Direction</label>
+        <select value={page.style.flexDirection} onChange={(e) => updatePageStyle(pageId, { flexDirection: e.target.value as "row" | "column" })} className="w-full border border-gray-300 rounded px-2 py-1 text-sm">
+          <option value="column">Column</option>
+          <option value="row">Row</option>
+        </select>
+      </div>
+      <div>
+        <label className="block text-xs text-gray-500 mb-1">Justify Content</label>
+        <select value={page.style.justifyContent} onChange={(e) => updatePageStyle(pageId, { justifyContent: e.target.value })} className="w-full border border-gray-300 rounded px-2 py-1 text-sm">
+          <option value="flex-start">Start</option>
+          <option value="center">Center</option>
+          <option value="flex-end">End</option>
+          <option value="space-between">Space Between</option>
+          <option value="space-around">Space Around</option>
+        </select>
+      </div>
+      <div>
+        <label className="block text-xs text-gray-500 mb-1">Align Items</label>
+        <select value={page.style.alignItems} onChange={(e) => updatePageStyle(pageId, { alignItems: e.target.value })} className="w-full border border-gray-300 rounded px-2 py-1 text-sm">
+          <option value="flex-start">Start</option>
+          <option value="center">Center</option>
+          <option value="flex-end">End</option>
+          <option value="stretch">Stretch</option>
+        </select>
+      </div>
+    </div>
+  );
+}
+
 function SortableItem({ component, isSelected, onSelect, onDelete }: {
   component: UIComponent;
   isSelected: boolean;
@@ -226,57 +277,6 @@ export function PageEditor() {
             </div>
           </div>
         )}
-      </div>
-    </div>
-  );
-}
-
-function PageStyleEditor({ pageId }: { pageId: string }) {
-  const { getCurrentProject, updatePageStyle } = useAppStore();
-  const project = getCurrentProject();
-  const page = project?.graph.pages.find((p) => p.id === pageId);
-  if (!page) return null;
-
-  return (
-    <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-4">
-      <h3 className="text-sm font-semibold text-gray-700">Page Style</h3>
-      <div>
-        <label className="block text-xs text-gray-500 mb-1">Background Color</label>
-        <input type="color" value={page.style.backgroundColor} onChange={(e) => updatePageStyle(pageId, { backgroundColor: e.target.value })} className="h-8 w-full rounded cursor-pointer" />
-      </div>
-      <div>
-        <label className="block text-xs text-gray-500 mb-1">Font Family</label>
-        <select value={page.style.fontFamily} onChange={(e) => updatePageStyle(pageId, { fontFamily: e.target.value })} className="w-full border border-gray-300 rounded px-2 py-1 text-sm">
-          <option value="sans-serif">Sans Serif</option>
-          <option value="serif">Serif</option>
-          <option value="monospace">Monospace</option>
-        </select>
-      </div>
-      <div>
-        <label className="block text-xs text-gray-500 mb-1">Flex Direction</label>
-        <select value={page.style.flexDirection} onChange={(e) => updatePageStyle(pageId, { flexDirection: e.target.value as "row" | "column" })} className="w-full border border-gray-300 rounded px-2 py-1 text-sm">
-          <option value="column">Column</option>
-          <option value="row">Row</option>
-        </select>
-      </div>
-      <div>
-        <label className="block text-xs text-gray-500 mb-1">Justify Content</label>
-        <select value={page.style.justifyContent} onChange={(e) => updatePageStyle(pageId, { justifyContent: e.target.value })} className="w-full border border-gray-300 rounded px-2 py-1 text-sm">
-          <option value="flex-start">Start</option>
-          <option value="center">Center</option>
-          <option value="flex-end">End</option>
-          <option value="space-between">Space Between</option>
-          <option value="space-around">Space Around</option>
-        </select>
-      </div>
-      <div>
-        <label className="block text-xs text-gray-500 mb-1">Align Items</label>
-        <select value={page.style.alignItems} onChange={(e) => updatePageStyle(pageId, { alignItems: e.target.value })} className="w-full border border-gray-300 rounded px-2 py-1 text-sm">
-          <option value="flex-start">Start</option>
-          <option value="center">Center</option>
-          <option value="flex-end">End</option>
-          <option value="stretch">Stretch</option>
-        </select>
       </div>
     </div>
   );

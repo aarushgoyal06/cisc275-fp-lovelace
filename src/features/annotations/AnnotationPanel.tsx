@@ -51,11 +51,18 @@ export function AnnotationPanel() {
               <label className="block text-xs text-gray-500 mb-1">Target</label>
               <select value={targetId} onChange={(e) => setTargetId(e.target.value)} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
                 <option value="">Select target…</option>
-                {targets.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {"name" in t ? t.name : `${t.sourcePageId} → ${t.targetPageId}`}
-                  </option>
-                ))}
+                {targets.map((t) => {
+                    const label = "name" in t
+                      ? t.name
+                      : (() => {
+                          const src = project.graph.pages.find((p) => p.id === t.sourcePageId);
+                          const tgt = project.graph.pages.find((p) => p.id === t.targetPageId);
+                          return `${src?.name ?? t.sourcePageId} → ${tgt?.name ?? t.targetPageId} (${t.label})`;
+                        })();
+                    return (
+                      <option key={t.id} value={t.id}>{label}</option>
+                    );
+                  })}
               </select>
             </div>
             <div className="col-span-2">
@@ -88,7 +95,7 @@ export function AnnotationPanel() {
             project.annotations.map((ann) => {
               const target = [...project.graph.pages, ...project.graph.routes].find((t) => t.id === ann.targetId);
               const targetName = target
-                ? ("name" in target ? target.name : (target as { label: string }).label ?? ann.targetId)
+                ? ("name" in target ? target.name : (target as { label: string }).label)
                 : ann.targetId;
               return (
                 <div key={ann.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">

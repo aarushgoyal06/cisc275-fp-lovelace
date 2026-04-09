@@ -103,7 +103,7 @@ export async function exportToDocx(project: ProjectData): Promise<void> {
     for (const ann of project.annotations) {
       const target = [...project.graph.pages, ...project.graph.routes].find((t) => t.id === ann.targetId);
       const targetName = target
-        ? ("name" in target ? target.name : (target as { label: string }).label ?? ann.targetId)
+        ? ("name" in target ? target.name : (target as { label: string }).label)
         : ann.targetId;
       children.push(new Paragraph({ children: [
         new TextRun({ text: `[${ann.type.toUpperCase()}] `, bold: true }),

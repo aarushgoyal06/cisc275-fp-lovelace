@@ -1,5 +1,9 @@
 import type { ProjectData, UIComponent } from "../types";
 
+function escapeString(s: string): string {
+  return s.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+}
+
 function pythonType(t: string): string {
   switch (t) {
     case "string": return "str";
@@ -70,10 +74,8 @@ export function generatePythonCode(project: ProjectData): string {
   for (const page of graph.pages) {
     const outgoingRoutes = graph.routes.filter((r) => r.sourcePageId === page.id);
     const annotations = project.annotations.filter((a) => a.targetId === page.id);
-    const incomingRoutes = graph.routes.filter((r) => r.targetPageId === page.id);
 
     const inputs = page.components.map(componentToInput).filter(Boolean);
-    void incomingRoutes;
 
     const funcName = page.name.toLowerCase().replace(/[^a-z0-9]/g, "_");
 
@@ -93,10 +95,10 @@ export function generatePythonCode(project: ProjectData): string {
     for (const comp of page.components) {
       switch (comp.type) {
         case "Header":
-          lines.push(`        Header("${comp.props.content.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"),`);
+          lines.push(`        Header("${escapeString(comp.props.content)}"),`);
           break;
         case "Text":
-          lines.push(`        Text("${comp.props.content.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"),`);
+          lines.push(`        Text("${escapeString(comp.props.content)}"),`);
           break;
         case "TextBox":
           lines.push(`        TextBox("${comp.props.name}"),`);

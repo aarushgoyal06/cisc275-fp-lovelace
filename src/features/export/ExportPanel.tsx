@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAppStore } from "../../store/useAppStore";
 import { generatePythonCode } from "../../utils/codeGen";
 import { exportToDocx } from "../../utils/exportDocx";
+import type { ProjectData } from "../../types";
 
 export function ExportPanel() {
   const { getCurrentProject, importProject, setView } = useAppStore();
@@ -46,14 +47,14 @@ export function ExportPanel() {
     const reader = new FileReader();
     reader.onload = (ev) => {
       try {
-        const data = JSON.parse(ev.target?.result as string) as Record<string, unknown>;
-        if (!data.id || !data.name || !data.graph) {
+        const data = JSON.parse(ev.target?.result as string) as ProjectData;
+        if (typeof data.id !== "string" || typeof data.name !== "string" || typeof data.graph !== "object") {
           setImportError("Invalid project file format");
           return;
         }
-        importProject(data as unknown as Parameters<typeof importProject>[0]);
+        importProject(data);
         setImportError("");
-        alert(`Project "${data.name as string}" imported successfully!`);
+        alert(`Project "${data.name}" imported successfully!`);
       } catch {
         setImportError("Failed to parse JSON file");
       }
