@@ -1,11 +1,19 @@
 import { render, screen } from "@testing-library/react";
-
 import { App } from "../src/App";
 
-test("App component display header", () => {
-    render(<App />);
+jest.mock("../src/store/useAppStore", () => ({
+  useAppStore: () => ({
+    currentView: "dashboard",
+    projects: [],
+    createProject: jest.fn(),
+    deleteProject: jest.fn(),
+    openProject: jest.fn(),
+    loadDemoProjects: jest.fn(),
+  }),
+}));
 
-    const heading = screen.getByText(/Final project template/i);
-
-    expect(heading).toBeInTheDocument();
+test("App renders dashboard by default", () => {
+  render(<App />);
+  const heading = screen.getByText(/Visual Website Planner/i);
+  expect(heading).toBeInTheDocument();
 });
