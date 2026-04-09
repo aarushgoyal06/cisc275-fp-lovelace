@@ -1,40 +1,33 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import { useAppStore } from "./store/useAppStore";
+import { Dashboard } from "./features/dashboard/Dashboard";
+import { ProjectOverview } from "./features/project/ProjectOverview";
+import { GraphEditor } from "./features/graph/GraphEditor";
+import { PageEditor } from "./features/page-editor/PageEditor";
+import { StateDesigner } from "./features/state-designer/StateDesigner";
+import { AnnotationPanel } from "./features/annotations/AnnotationPanel";
+import { ExportPanel } from "./features/export/ExportPanel";
 
 export function App() {
-    const [count, setCount] = useState(0);
+  const { currentView } = useAppStore();
 
-    return (
-        <>
-            <div>
-                <a href="https://vite.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                </a>
-                <a href="https://react.dev" target="_blank">
-                    <img
-                        src={reactLogo}
-                        className="logo react"
-                        alt="React logo"
-                    />
-                </a>
-            </div>
-            <h1>Vite + React</h1>
-            <div className="card">
-                <button onClick={() => setCount((count) => count + 1)}>
-                    count is {count}
-                </button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
-            </div>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more. Final project
-                template.
-            </p>
-        </>
-    );
+  switch (currentView) {
+    case "dashboard":
+      return <Dashboard />;
+    case "project":
+      return <ProjectOverview />;
+    case "graph":
+      return <GraphEditor />;
+    case "page-editor":
+      return <PageEditor />;
+    case "state-designer":
+      return <StateDesigner />;
+    case "annotations":
+      return <AnnotationPanel />;
+    case "export":
+      return <ExportPanel />;
+    default:
+      return <Dashboard />;
+  }
 }
 
 export default App;
